@@ -19,6 +19,7 @@ jobs:
         id: extract_branch
       - name: Change dir
         run: cd ${{ steps.extract_branch.outputs.branch }}
+      - run: pwd
       - run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
       - run: cmake . -DPATCH_VERSION=${{ github.run_number }} -DWITH_BOOST_TEST=ON
       - run: cmake --build .

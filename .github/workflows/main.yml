@@ -17,17 +17,11 @@ jobs:
         shell: bash
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: extract_branch
-      - run: ls -l
-      - name: Change dir
-        run: cd ${{ steps.extract_branch.outputs.branch }}
-      - run: ls -l
-      - run: pwd
-      - run: ls -l
       - run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
-      - run: cmake . -DPATCH_VERSION=${{ github.run_number }} -DWITH_BOOST_TEST=ON
-      - run: cmake --build .
-      - run: cmake --build . --target test
-      - run: cmake --build . --target package
+      - run: cmake ${{ steps.extract_branch.outputs.branch }} -DPATCH_VERSION=${{ github.run_number }} -DWITH_BOOST_TEST=ON
+      - run: cmake --build ${{ steps.extract_branch.outputs.branch }}
+      - run: cmake --build ${{ steps.extract_branch.outputs.branch }} --target test
+      - run: cmake --build ${{ steps.extract_branch.outputs.branch }} --target package
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
